@@ -34,7 +34,6 @@ function PostForm({post}) {
                 content: data.content,
                 featuredImage: file? file.$id : post.featuredImage,
                 status: data.status,
-                slug: data.slug
             })
 
             if(dbPost){

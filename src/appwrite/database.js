@@ -1,5 +1,5 @@
 import conf from '../conf/conf.js'
-import { Client, Databases, Query } from "appwrite"
+import { Client, Databases, Query, ID } from "appwrite"
 
 class DatabaseService{
     client = new Client();
@@ -12,7 +12,7 @@ class DatabaseService{
         this.databases = new Databases(this.client);
     }
 
-    async createPost({title, slug, content, featuredImage, status, userID}){
+    async createPost({title, slug, content, featuredImage, status, userId}){
         try {
             return await this.databases.createDocument(
                 conf.appwrite_database, // databaseId
@@ -23,11 +23,12 @@ class DatabaseService{
                     content,
                     featuredImage,
                     status,
-                    userID
+                    userId,
                 } // data
             );
         } catch (error) {
             console.log("Appwrite:: databases:: createPost:: error ", error)
+            return false;
         }
     }
 
@@ -46,12 +47,13 @@ class DatabaseService{
             );
         } catch (error) {
             console.log("Appwrite:: databases:: updatePost:: error ", error)
+            return false;
         }
     }
 
     async deletePost(slug){
         try {
-            await databases.deleteDocument(
+            await this.databases.deleteDocument(
                 conf.appwrite_database, // databaseId
                 conf.appwrite_collection, // collectionId
                 slug // documentId - here it is slug
@@ -65,7 +67,7 @@ class DatabaseService{
 
     async getPost(slug){
         try {
-            return await databases.getDocument(
+            return await this.databases.getDocument(
                 conf.appwrite_database, // databaseId
                 conf.appwrite_collection, // collectionId
                 slug // documentId - here it is slug
@@ -75,19 +77,18 @@ class DatabaseService{
         }
     }
 
-    async getAllPosts(query = []){
+    async getAllPosts(queries = [Query.equal("status", "active")]){
+        //return an array of objects
         try {
-            return await databases.getDocument(
+            return await this.databases.listDocuments(
                 conf.appwrite_database, // databaseId
                 conf.appwrite_collection, // collectionId
-                query,
+                queries,
             )
         } catch (error) {
             console.log("Appwrite:: databases:: getAllPosts:: error ", error)
         }
     }
-    
-
 }
 
 const databaseService = new DatabaseService();
