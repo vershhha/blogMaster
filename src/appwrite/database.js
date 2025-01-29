@@ -1,5 +1,5 @@
 import conf from '../conf/conf.js'
-import { Client, Databases, Query, ID } from "appwrite"
+import { Client, Databases, Query } from "appwrite"
 
 class DatabaseService{
     client = new Client();
@@ -12,54 +12,49 @@ class DatabaseService{
         this.databases = new Databases(this.client);
     }
 
-    async createPost({title, slug, content, featuredImage, status, userId}){
+    async createPost({title, slug, content, featuredImage, status, userID}){
         try {
-            const uniqueID = `post-${Date.now()}`;
             return await this.databases.createDocument(
                 conf.appwrite_database, // databaseId
                 conf.appwrite_collection, // collectionId
-                uniqueID, // documentId - here it is slug
+                slug, // documentId - here it is slug
                 {
                     title,
                     content,
                     featuredImage,
                     status,
-                    userId,
-                    slug,
+                    userID
                 } // data
             );
         } catch (error) {
             console.log("Appwrite:: databases:: createPost:: error ", error)
-            return false;
         }
     }
 
-    async updatePost(docId, {title, slug, content, featuredImage, status}){
+    async updatePost(slug, {title, content, featuredImage, status}){
         try {
             return await this.databases.updateDocument(
                 conf.appwrite_database, // databaseId
                 conf.appwrite_collection, // collectionId
-                docId, // documentId - here it is slug
+                slug, // documentId - here it is slug
                 {
                     title,
                     content,
                     featuredImage,
                     status,
-                    slug,
                 } // data
             );
         } catch (error) {
             console.log("Appwrite:: databases:: updatePost:: error ", error)
-            return false;
         }
     }
 
-    async deletePost(docId){
+    async deletePost(slug){
         try {
-            await this.databases.deleteDocument(
+            await databases.deleteDocument(
                 conf.appwrite_database, // databaseId
                 conf.appwrite_collection, // collectionId
-                docId // documentId - here it is slug
+                slug // documentId - here it is slug
             )
             return true;
         } catch (error) {
@@ -68,30 +63,31 @@ class DatabaseService{
         }
     }
 
-    async getPost(docId){
+    async getPost(slug){
         try {
-            return await this.databases.getDocument(
+            return await databases.getDocument(
                 conf.appwrite_database, // databaseId
                 conf.appwrite_collection, // collectionId
-                docId // documentId - here it is slug
+                slug // documentId - here it is slug
             )
         } catch (error) {
             console.log("Appwrite:: databases:: getPost:: error ", error)
         }
     }
 
-    async getAllPosts(queries = [Query.equal("status", "active")]){
-        //return an array of objects
+    async getAllPosts(query = []){
         try {
-            return await this.databases.listDocuments(
+            return await databases.getDocument(
                 conf.appwrite_database, // databaseId
                 conf.appwrite_collection, // collectionId
-                queries,
+                query,
             )
         } catch (error) {
             console.log("Appwrite:: databases:: getAllPosts:: error ", error)
         }
     }
+    
+
 }
 
 const databaseService = new DatabaseService();
