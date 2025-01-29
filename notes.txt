@@ -1,0 +1,75 @@
+//enhance it furthur
+
+Improvement in useEffect :
+    To improve performance, when you subscribe something in useEffect, clean it up once then component is unmounted
+
+    useEffect(() => {
+        const subscription = someAPI.subscribe(data => { 
+          console.log(data); 
+        });
+      
+        // Cleanup if the effect runs again or the component unmounts
+        return () => {
+          subscription.unsubscribe();  // Remove subscription
+        };
+    }, [someAPI]);  // Re-run only if 'someAPI' changes
+
+why APPWRITE?
+- i needed to create a react app, that can interact with backend
+- instead of creating my own backend, i used BaaS for faster development
+
+why redux?
+- since this is a big app, i want to pass information to all the components all at once, without prop drilling
+- redux also provides synchronization, and redux devTools
+
+why react-router?
+- so that i can map, different components to specific URLs
+- it allows to reach to different parts of the web, without loading the entire page.
+- how does it happen
+    - due to mapping, it feels like navigating between multiple pages, but actually updating the parts of the same page.
+
+why react-loading? 
+- to design the loading component
+
+why react-hook-from?
+- needed to simply form creation, as I needed to perform validation and handle errors properly
+- it has Controller that makes easier to integrate libraries into the react-hook-form
+
+why tinymce?
+- to integrate an editor for the post
+
+Terms:
+1. container
+    - it provides logic, data and manages state for the dumb components (presentational)
+    - it leads to reusibility, some components can depend entirely on props so can be used in multiple contexts
+    - fetches data once for all the children, reduces unnecessary re-renders and improving performance.
+    - simplifies debugging
+
+2. forwardRef -> this is a hook that is used to pass ref to the child component, by using which, the parent can access the child component
+
+    eg. I've created an Input component, which has a <input/> tag.. so that i need not to create this tag over and over again
+        Now, I'm using this Input component in a form, but in the form, I want to collect data from the <input/> tag under Input component,
+        so there is no way I can directly manipulate <input/> tag
+
+        In such cases, we use forwardRef, by using this hook, ref assigned to the Input Component can be assigned to <input/> tag
+        now, i can directly manipulate <input/>
+
+        //now Input's ref is not Input's but <input/> after using forwardRef
+        <div>
+            <Input ref={inputRef} placeholder="Enter text" />
+            <button onClick={focusInput}>Focus Input</button>
+        </div>
+
+3. AuthLayout - it is a common practice, performed to separate authentication pages (signup, login, reset password) separate from the main app.
+
+
+INSTALLATIONS
+1. appwrite
+2. @reduxjs/toolkit
+3. react-redux
+4. react-router
+5. react-loading 
+6. react-hook-form
+7. @tinymce/tinymce-react
+
+
